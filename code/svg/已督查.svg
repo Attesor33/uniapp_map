@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256px" height="208px" viewBox="0 0 256 208" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>已督查</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="228" height="180" rx="12"></rect>
+        <filter x="-9.2%" y="-11.7%" width="118.4%" height="123.3%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="7" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0315837495   0 0 0 0 0.0860353672   0 0 0 0 0.19678442  0 0 0 0.237652972 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" stop-opacity="0.0502349213" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.145541958" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="登陆" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="首页" transform="translate(-246.000000, -382.000000)">
+            <g id="已督查" transform="translate(260.000000, 396.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="蒙版">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                    <use fill="#5F4FD0" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <path d="M88.2230296,71 L117,99.9958024 L117,206 L15.242292,206 L15.242292,163.717319 L-3,163.717319 L-3,108.953643 L15.242292,108.953643 L15.242292,71 L88.2230296,71 Z M80.0089509,81.3755199 L25.1827199,81.3755199 L25.1827199,108.953795 L49.4677403,108.953795 L49.4677403,163.71747 L25.1827199,163.71747 L25.1827199,172.540265 L57.7040907,172.540265 L57.7040907,122.964199 L67.6445187,122.964199 L67.6445187,182.915634 L25.1827199,182.915634 L25.1827199,195.624783 L107.059717,195.624783 L107.059717,109.695033 L80.0089509,109.695033 L80.0089509,81.3755199 Z M97.0724314,172.669861 L97.0724314,182.785887 L78.3721225,182.785887 L78.3721225,172.669861 L97.0724314,172.669861 Z M97.0724314,148.542523 L97.0724314,158.658549 L78.3721225,158.658549 L78.3721225,148.542523 L97.0724314,148.542523 Z M97.0724314,124.415033 L97.0724314,134.531059 L78.3721225,134.531059 L78.3721225,124.415033 L97.0724314,124.415033 Z" id="形状结合" fill="url(#linearGradient-4)" fill-rule="nonzero" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+<!-- Code injected by live-server -->
+<script type="text/javascript">
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script></svg>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256px" height="208px" viewBox="0 0 256 208" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>督查对象</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="228" height="180" rx="12"></rect>
+        <filter x="-9.2%" y="-11.7%" width="118.4%" height="123.3%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="7" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0315837495   0 0 0 0 0.0860353672   0 0 0 0 0.19678442  0 0 0 0.237652972 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" stop-opacity="0.0502349213" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.145541958" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="登陆" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="首页" transform="translate(-2.000000, -382.000000)">
+            <g id="督查对象" transform="translate(16.000000, 396.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="蒙版">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                    <use fill="#5085F1" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <path d="M105.75,71 C108,71 109.5,72.5 109.5,74.75 L109.5,74.75 L109.5,138.5 L113.25,138.5 C115.5,138.5 117,140 117,142.25 L117,142.25 L117,187.25 C117,189.5 115.5,191 113.25,191 L113.25,191 L0.75,191 C-1.5,191 -3,189.5 -3,187.25 L-3,187.25 L-3,142.25 C-3,140 -1.5,138.5 0.75,138.5 L0.75,138.5 L4.5,138.5 L4.5,89.75 C4.5,87.5 6,86 8.25,86 L8.25,86 L27,86 L27,74.75 C27,72.5 28.5,71 30.75,71 L30.75,71 Z M102,78.5 L34.5,78.5 L34.5,138.5 L40.5,138.5 C42,138.5 44.25,140 44.25,142.25 L44.25,142.25 L44.25,153.5 L70.5,153.5 L70.5,142.25 C70.5,140 72,138.5 73.5,138.5 L73.5,138.5 L102,138.5 L102,78.5 Z M27,93.5 L12,93.5 L12,138.5 L27,138.5 L27,93.5 Z M90.75,116 C93,116 94.5,117.5 94.5,119.75 C94.5,122 93,123.5 90.75,123.5 L90.75,123.5 L45.75,123.5 C43.5,123.5 42,122 42,119.75 C42,117.5 43.5,116 45.75,116 L45.75,116 Z M90.75,93.5 C93,93.5 94.5,95 94.5,97.25 C94.5,99.5 93,101 90.75,101 L90.75,101 L45.75,101 C43.5,101 42,99.5 42,97.25 C42,95 43.5,93.5 45.75,93.5 L45.75,93.5 Z" id="形状结合" fill="url(#linearGradient-4)" fill-rule="nonzero" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+<!-- Code injected by live-server -->
+<script type="text/javascript">
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script></svg>

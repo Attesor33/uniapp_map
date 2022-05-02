@@ -1,0 +1,492 @@
+<template>
+	<view class="duchaPage">
+		<view class="tabContanir">
+			<view class="tabBox">
+				<view v-for="(item,index) in tabsMore" :key="index" class="imgBox">
+					<view :class="index==suoyin?'titleBox':'titleBox1'">
+						<image class="img" :src="item.url" mode="widthFix" @click="Fillin(item.text,index)"></image>
+					</view>
+					<view :class="index==suoyin?'text1':'text'">{{item.text}}</view>
+				</view>
+			</view>
+		</view>
+		<view class="searchBox">
+			<view class="searchInput">
+				<view class="left">
+					<view class="top">
+						<input class="uni-input topInput" v-model="value" />
+						<van-icon name="close" @click="clearInput" />
+					</view>
+					<view class="bottom">
+						<input class="uni-input" placeholder="在此输入督查组" v-model="value1" />
+					</view>
+				</view>
+				<view class="searchBtn">
+					<van-icon name="search" color="#fff" size="40rpx" class="search" @click="search" />
+				</view>
+			</view>
+		</view>
+		<view class="cardBox" v-if="textAll=='全部'">
+			<view class="card" v-for="(item,index) in cardObjAll" :key="index" @click="toDetail(item)">
+				<view class="title">
+					<view class="text">{{item.pnm}}</view>
+					<van-icon name="arrow" class="arrow" color="#999" />
+				</view>
+				<view class="guanli">{{item.ins_type}}</view>
+				<view class="date">{{item.sttm}} ~ {{item.entm}}</view>
+			</view>
+		</view>
+		<view class="cardBox" v-else>
+			<view class="card" v-for="(item,index) in cardObj" :key="index" @click="toDetail(item)">
+				<view class="title">
+					<view class="text">{{item.pnm}}</view>
+					<van-icon name="arrow" class="arrow" color="#999" />
+				</view>
+				<view class="guanli">{{item.ins_type}}</view>
+				<view class="date">{{item.sttm}} ~ {{item.entm}}</view>
+			</view>
+		</view>
+		<view class="loading" v-show="loadings">
+			<view class="loading-san">
+
+			</view>
+		</view>
+		<view class="nodata" v-show="nodata">
+			没有更多数据
+		</view>
+
+	</view>
+</template>
+
+<script>
+	import util from "../../common/request.js"
+	export default {
+		data() {
+			return {
+				textAll: '全部',
+				cardObj: [],
+				suoyin: 0,
+				cardObjAll: [],
+				tabsMore: [{
+						url: require('@/static/images/qb.png'),
+						text: '全部'
+					},
+					{
+						url: require('@/static/images/szy.png'),
+						text: '水资源管理'
+					},
+					{
+						url: require('@/static/images/shgc.png'),
+						text: '水毁工程'
+					},
+					{
+						url: require('@/static/images/xxsk.png'),
+						text: '小型水库'
+					},
+					{
+						url: require('@/static/images/dxs.png'),
+						text: '地下水超采'
+					},
+					{
+						url: require('@/static/images/yys.png'),
+						text: '饮水安全'
+					},
+					{
+						url: require('@/static/images/hh.png'),
+						text: '河湖管理'
+					},
+					{
+						url: require('@/static/images/hhc.png'),
+						text: '河湖长制'
+					},
+				],
+				value: '',
+				value1: '',
+
+				last_page: '', //总页数
+				page: 1, //上拉加载的起始页
+				loadingnum: 5, //加载条数
+				send: false, //上拉加载的状态  避免数据没更新时重复请求
+				nodata: false, //没有更多数据
+				loadings: false, //加载框
+
+				last_page1: '', //总页数
+				page1: 1, //上拉加载的起始页
+				loadingnum1: 2, //加载条数
+				send1: false, //上拉加载的状态  避免数据没更新时重复请求
+				nodata1: false, //没有更多数据
+				loadings1: false, //加载框
+
+			}
+		},
+		onLoad() {
+			this.search();
+		},
+		methods: {
+			search() {
+				let data = {
+					ins_nm: this.value,
+					pagesize: this.loadingnum,
+					pagenum: this.page,
+
+				}
+				util.request("insplan/getInsPlanList", "Get", data, false, false, false, true).then(res => {
+					// console.log(res)
+					this.cardObjAll = res.data
+					this.last_page = res.total
+
+				})
+
+
+			},
+			toDetail(item) {
+				console.log(item)
+				uni.navigateTo({
+					url: "/pages/shukuducha/shukuducha?title=" + item.ins_type + '&planId=' + item.uuid
+				})
+			},
+			clearInput() {
+				this.value = ''
+				this.search()
+			},
+			Fillin(text, index) {
+				this.suoyin = index
+				this.textAll = text
+
+				if (this.textAll == '全部') {
+					this.cardObjAll = this.cardObjAll
+				} else {
+					this.page1 = '1'
+					let data1 = {
+						ins_nm: this.value,
+						ins_type: this.textAll,
+						pagesize: this.loadingnum1,
+						pagenum: this.page1,
+					}
+					util.request("insplan/getInsPlanList", "Get", data1, false, false, false, true).then(res => {
+						// console.log(res)
+						this.cardObj = res.data
+						this.last_page1 = res.total
+
+					})
+				}
+			},
+
+
+		},
+		//上拉加载
+		onReachBottom() {
+			if (this.textAll == '全部') {
+				//判断总页数是否大于1
+				if (this.last_page > 1) {
+					if (this.send == false) {
+						if (this.page <= this.last_page) {
+							//开始加载
+
+							this.send = true;
+							this.loadings = true; //这个是上拉的特效
+							util.request("insplan/getInsPlanList", "Get", {
+									pagesize: this.loadingnum,
+									pagenum: this.page
+								}, false, false, false, true)
+								.then(res => {
+									// console.log(res)
+									// const {
+									// 	productlist
+									// } = this;
+									if (res.code == 0) {
+										// console.log('11111111111')
+										//延迟加载数据 减少并发量
+										setTimeout(() => {
+											//结束加载
+											this.loadings = false;
+											this.cardObjAll = [...this.cardObjAll, ...res.data]
+											this.send = false;
+										}, 700)
+										this.page++;
+									} else {
+										this.$message.info('诶呀,加载失败了稍后再试试吧');
+										this.send = false;
+									}
+
+								}).catch(err => {
+									// console.log(res)
+									this.send = false;
+								})
+
+						} else {
+							this.nodata = true; //当加载完没数据后 显示无更多数据							
+						}
+					}
+
+				}
+
+			} else {
+				//判断总页数是否大于1
+
+				if (this.last_page1 > 1) {
+					console.log('11111111111')
+					if (this.send1 == false) {
+						if (this.page1 <= this.last_page1) {
+							//开始加载
+
+							this.send1 = true;
+							this.loadings1 = true; //这个是上拉的特效
+							util.request("insplan/getInsPlanList", "Get", {
+									pagesize: this.loadingnum1,
+									pagenum: this.page1,
+									ins_type: this.textAll
+								}, false, false, false, true)
+								.then(res => {
+									console.log(res)
+									// const {
+									// 	productlist
+									// } = this;
+									if (res.code == 0) {
+
+										//延迟加载数据 减少并发量
+										setTimeout(() => {
+											//结束加载
+											this.loadings1 = false;
+											this.cardObj = [...this.cardObj, ...res.data]
+											this.send1 = false;
+										}, 700)
+										this.page1++;
+									} else {
+										this.$message.info('诶呀,加载失败了稍后再试试吧');
+										this.send1 = false;
+									}
+
+								}).catch(err => {
+									// console.log(res)
+									this.send1 = false;
+								})
+
+						} else {
+							this.nodata1 = true; //当加载完没数据后 显示无更多数据							
+						}
+					}
+
+				}
+			}
+
+
+		},
+	}
+</script>
+
+<style lang="less" scoped>
+	.duchaPage {
+		position: relative;
+		.tabContanir {
+			background: #2863DB;
+			width: 100%;
+			overflow-x: scroll;
+			height: 250rpx;
+			.tabBox {
+				display: flex;
+				flex-wrap: nowrap;
+				overflow: hidden;
+				width: max-content;
+				padding-top: 90rpx;
+
+				.imgBox {
+					padding-left: 32rpx;
+					position: relative;
+
+					.titleBox {
+						width: 76rpx;
+						height: 76rpx;
+						border: 2rpx solid #FFFFFF;
+						border-radius: 50%;
+						position: relative;
+						left: 50%;
+						transform: translateX(-50%);
+						background: #4577dd;
+
+						.img {
+							position: absolute;
+							top: 50%;
+							left: 50%;
+							transform: translate(-50%, -50%);
+							width: 36rpx;
+							height: 36rpx;
+						}
+
+					}
+
+					.titleBox1 {
+						width: 76rpx;
+						height: 76rpx;
+						border: 2rpx solid #FFFFFF;
+						border-radius: 50%;
+						position: relative;
+						left: 50%;
+						transform: translateX(-50%);
+
+						.img {
+							position: absolute;
+							top: 50%;
+							left: 50%;
+							transform: translate(-50%, -50%);
+							width: 36rpx;
+							height: 36rpx;
+						}
+
+					}
+
+					.text {
+						padding-top: 5px;
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 24rpx;
+						color: rgba(255, 255, 255, 0.50);
+						letter-spacing: 0;
+						text-align: center;
+					}
+
+					.text1 {
+						padding-top: 5px;
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 24rpx;
+						color: #FFFFFF;
+						letter-spacing: 0;
+						text-align: center;
+					}
+				}
+
+			}
+
+		}
+
+		.searchBox {
+			width: 710rpx;
+			background: #FFFFFF;
+			border: 2rpx solid #2862DB;
+			box-shadow: 0rpx 0rpx 18rpx 0rpx rgba(0, 0, 0, 0.09);
+			border-radius: 28rpx;
+			position: absolute;
+			top: 220rpx;
+			left: 50%;
+			z-index: 99;
+			transform: translateX(-50%);
+
+			.searchInput {
+				display: flex;
+				padding: 20rpx 24rpx 20rpx 30rpx;
+
+				.left {
+					flex: 1;
+
+					.top {
+						border-bottom: 1rpx solid #EBEBEB;
+						display: flex;
+						justify-content: space-between;
+
+						.topInput {
+							flex: 1;
+						}
+					}
+
+					.bottom {
+						padding-top: 20rpx;
+					}
+				}
+			}
+
+			.searchBtn {
+				margin-left: 40rpx;
+				width: 17%;
+				background: #4F83EF;
+				border-radius: 32rpx;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		}
+
+		.cardBox {
+			margin: 19% 40rpx 40rpx 40rpx;
+			// flex: 1;
+			// position: relative;
+
+
+			.card {
+				padding: 20rpx;
+				background: #FFFFFF;
+				border-radius: 12rpx;
+				margin-bottom: 20rpx;
+
+				.title {
+					font-family: HarmonyOS_Sans_SC_Medium;
+					font-size: 32rpx;
+					color: #333333;
+					letter-spacing: 0;
+					font-weight: 500;
+					display: flex;
+
+					.text {
+						flex: 1;
+					}
+				}
+
+				.guanli {
+					font-family: HarmonyOS_Sans_SC_Medium;
+					font-size: 28rpx;
+					color: #2862DB;
+					letter-spacing: 0;
+					font-weight: 500;
+					padding-top: 20rpx;
+				}
+
+				.date {
+					font-family: HarmonyOS_Sans_SC;
+					font-size: 28rpx;
+					color: #999999;
+					letter-spacing: 0;
+					font-weight: 400;
+					padding-top: 20rpx;
+				}
+			}
+		}
+
+		//加载
+		.loading {
+			width: 100%;
+			height: 100upx;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			background-color: #F6F7F9;
+
+			.loading-san {
+				display: flex;
+				justify-content: space-around;
+				align-items: center;
+
+				.logintext {
+					margin-left: 16upx;
+					font-size: 28upx;
+					font-family: PingFang;
+					color: #999999;
+				}
+			}
+		}
+
+		//没有更多数据
+		.nodata {
+			width: 100%;
+			height: 100upx;
+			background-color: #F6F7F9;
+			text-align: center;
+			line-height: 100upx;
+			color: #999999;
+			font-size: 24upx;
+			font-family: PingFang SC;
+			font-weight: 400;
+		}
+	}
+
+	.tabContanir::-webkit-scrollbar {
+		display: none
+	}
+</style>

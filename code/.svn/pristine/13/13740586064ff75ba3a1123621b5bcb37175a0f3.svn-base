@@ -1,0 +1,239 @@
+<template>
+	<view class="container">
+		<view class="seize-a-seat">
+			<view class="Login-welcome">
+				您好，欢迎来到
+
+			</view>
+			<view>
+				<image src="../../static/images/gfhygvbasdjfgbjsa.png" mode="" class="Login-header-font"></image>
+			</view>
+
+			<!-- 占位 -->
+		</view>
+		<view class="Login-seat">
+			<!-- 占位 -->
+		</view>
+		<view class="Login-content">
+			<uni-forms ref="form" :modelValue="formData" :rules="rules">
+				<uni-forms-item label="账号" name="name">
+					<input class="input" v-model="formData.name" type="text" placeholder="请输入账号" @input="binddata('email',$event.detail.value)" />
+				</uni-forms-item>
+				<uni-forms-item label="密码" name="password" class="uni-password">
+					<view style="display: flex;">
+						<input class="input" v-model="formData.password" type="text" placeholder="请输入密码" @input="binddata('email',$event.detail.value)"
+						 :password="showPassword" />
+						<uni-icons :type="showPassword?'eye-slash-filled':'eye-filled'" size="20" @click="showPwd()" style="margin-left: 0px;"></uni-icons>
+					</view>
+
+				</uni-forms-item>
+			</uni-forms>
+			<button @click="submit" class="Login-submit">登 录</button>
+		</view>
+		<view>
+			<image src="@/static/images/ewuihuirhkgjfb.png" mode="" class="Login-footer-img"></image>
+		</view>
+
+	</view>
+</template>
+
+<script>
+	import uniForms from "../../components/uni-forms/uni-forms.vue"
+	import uniFormsItem from "@/components/uni-forms-item/uni-forms-item.vue"
+	import uniIcons from "../../components/uni-icons/uni-icons.vue"
+	import util from "../../common/request.js"
+	export default {
+		components: {
+			uniForms,
+			uniFormsItem
+		},
+		data() {
+			return {
+				// 表单数据
+				formData: {
+					name: '',
+					password: ''
+				},
+				rules: {
+					// 对name字段进行必填验证
+					name: {
+						rules: [{
+								required: true,
+								errorMessage: '请输入姓名',
+							},
+
+						]
+					},
+					// 对email字段进行必填验证
+					password: {
+						rules: [{
+								required: true,
+								errorMessage: '请输入密码',
+							},
+
+						]
+					}
+				},
+				showPassword: true
+			}
+		},
+		onLoad() {
+
+		},
+		methods: {
+			// 登录按钮
+			submit() {
+				this.$refs.form.validate().then(res => {
+					// console.log('表单数据信息：', res);
+					let data = {
+						username: res.name,
+						password: res.password,
+					}
+					// 登录接口的api
+					// 最后一个true是登录接口用的请求头
+					util.request("system/loginnoverification", "POST", data, null, true).then((res) => {
+						// console.log(res)
+						if (res.code == 200) {
+							uni.setStorageSync("x-access-token", res.token)
+							// app端权限固定值
+							let rootMenuId = {
+								rootMenuId: 12234
+							}
+							// 权限认证的api
+							// 最后一个true值为token值，不写会认证失败
+							util.request("system/getRouters", "Get", rootMenuId, false, false, false, true).then(res => {
+								// console.log(res)
+								if (res.code == 200) {
+									let jurisdiction = JSON.stringify(res.data)
+									// 跳转至Home页
+									console.log(jurisdiction)
+									uni.navigateTo({
+										url: '/pages/quanxian/home?jurisdiction=' + jurisdiction
+									});
+								} else {
+									uni.showToast({
+										title: '此账号认证失败',
+										duration: 2000,
+										icon: 'none'
+									});
+								}
+
+							})
+						} else {
+							uni.showToast({
+								title: '账号或密码错误',
+								duration: 2000,
+								icon: 'none'
+							});
+						}
+					}).catch((res) => {
+						console.log("请求失败", res)
+					})
+
+				})
+			},
+			// 小眼睛
+			showPwd() {
+				this.showPassword = !this.showPassword
+			}
+		},
+
+
+	}
+</script>
+
+<style lang='scss' scoped>
+	page {
+		background: #fff;
+	}
+
+	.container {
+		width: 100%;
+		height: 100vh;
+		background: url(../../static/images/b11083c6934a9dca93d410b13614f60f.png) no-repeat;
+		background-size: 100%;
+
+
+		.seize-a-seat {
+			width: 100%;
+			height: 430rpx;
+
+			.Login-welcome {
+				width: 280px;
+				height: 56px;
+				font-family: HarmonyOS_Sans_SC_Medium;
+				font-size: 20px;
+				color: #FFFFFF;
+				letter-spacing: 0;
+				font-weight: 500;
+				padding: 90px 0 0 20px;
+
+				.Login-xian {
+
+
+					width: 20px;
+					line-height: 56px;
+				}
+			}
+
+			.Login-header-font {
+				width: 284px;
+				height: 27px;
+				/* margin-top: 65px; */
+				margin-left: 20px;
+			}
+		}
+
+		.Login-seat {
+			width: 100%;
+			height: 36px;
+			background: #ffffff;
+			border-radius: 40rpx 40rpx 0 0;
+
+		}
+
+
+
+
+
+		.Login-content {
+			.uni-forms-item {
+				width: 65%;
+				margin: 0 auto;
+			}
+
+			/* .uni-forms-item__label{
+	width: 40px !important;
+} */
+			uni-input {
+				/* width: 60%;
+				margin: 40px auto;
+				height: 45px; */
+				border-bottom: 1px solid #D8D8D8;
+				margin-top: 10px;
+				width: 178px;
+			}
+
+			.Login-submit {
+				width: 300px;
+				height: 50px;
+				background: #2863DB;
+				color: #ffffff;
+				box-shadow: 0px 1px 10px 0px;
+				border-radius: 40px;
+				font-size: 15px;
+				line-height: 50px;
+				margin-top: 50px;
+			}
+		}
+
+		.Login-footer-img {
+			/* background: url('../../static/images/bianzu2.png') no-repeat;
+			background-size: 100% 270px; */
+			width: 100%;
+			height: 240px;
+			margin-top: 40px;
+		}
+
+	}
+</style>

@@ -1,0 +1,325 @@
+<template>
+	<view>
+		<navBar :title="title">
+			<template #left>
+				<van-icon @click="back" name="arrow-left" color="#FFFFFF" />
+			</template>
+
+		</navBar>
+		<van-search :value="value" placeholder="输入关键字" @change="onChange" background='rgba(255, 255, 255,0)' />
+		<van-tabs :active="0" @change="onTabChange" title-active-color="#000;" color="#2862DB;">
+			<van-tab title="全部">
+				<view class="cardBox">
+					<view class="card" @click="detail(item)" v-for="(item, index) in typeListAll">
+						<view class="title">
+							<view class="text">{{item.node_nm}}{{item.nm}}
+								<text v-if="item.state==='已督查'" class="tipSuccess">{{item.state}}</text>
+								<text v-if="item.state==='未督查'" class="tipError">{{item.state}}</text>
+								<text v-if="item.state==='督查中'" class="tiping">{{item.state}}</text>
+							</view>
+							<van-icon name="arrow" class="arrow" color="#999" />
+						</view>
+						<view class="dateBox">
+							<view v-if="item.address" class="dateText">{{item.address}}
+							</view>
+							<view v-if="item.uptm" class="date">{{item.uptm}}</view>
+						</view>
+					</view>
+				</view>
+			</van-tab>
+			<van-tab title="已督查">
+				<view class="cardBox">
+					<view class="card" @click="detail(item)" v-for="(item, index) in typeList1">
+						<view class="title">
+							<view class="text">{{item.node_nm}}+{{item.nm}}
+								<text v-if="item.state==='已督查'" class="tipSuccess">{{item.state}}</text>
+								<text v-if="item.state==='未督查'" class="tipError">{{item.state}}</text>
+								<text v-if="item.state==='督查中'" class="tiping">{{item.state}}</text>
+							</view>
+							<van-icon name="arrow" class="arrow" color="#999" />
+						</view>
+						<view class="dateBox">
+							<view v-if="item.address" class="dateText">{{item.address}}
+							</view>
+							<view v-if="item.uptm" class="date">{{item.uptm}}</view>
+						</view>
+					</view>
+				</view>
+			</van-tab>
+			<van-tab title="督查中">
+				<view class="cardBox">
+					<view class="card" @click="detail(item)" v-for="(item, index) in typeList2">
+						<view class="title">
+							<view class="text">{{item.node_nm}}+{{item.nm}}
+								<text v-if="item.state==='已督查'" class="tipSuccess">{{item.state}}</text>
+								<text v-if="item.state==='未督查'" class="tipError">{{item.state}}</text>
+								<text v-if="item.state==='督查中'" class="tiping">{{item.state}}</text>
+							</view>
+							<van-icon name="arrow" class="arrow" color="#999" />
+						</view>
+						<view class="dateBox">
+							<view v-if="item.address" class="dateText">{{item.address}}
+							</view>
+							<view v-if="item.uptm" class="date">{{item.uptm}}</view>
+						</view>
+					</view>
+				</view>
+			</van-tab>
+			<van-tab title="未督查">
+				<view class="cardBox">
+					<view class="card" @click="detail(item)" v-for="(item, index) in typeList3">
+						<view class="title">
+							<view class="text">{{item.node_nm}}+{{item.nm}}
+								<text v-if="item.state==='已督查'" class="tipSuccess">{{item.state}}</text>
+								<text v-if="item.state==='未督查'" class="tipError">{{item.state}}</text>
+								<text v-if="item.state==='督查中'" class="tiping">{{item.state}}</text>
+							</view>
+							<van-icon name="arrow" class="arrow" color="#999" />
+						</view>
+						<view class="dateBox">
+							<view v-if="item.address" class="dateText">{{item.address}}
+							</view>
+							<view v-if="item.uptm" class="date">{{item.uptm}}</view>
+						</view>
+					</view>
+				</view>
+			</van-tab>
+		</van-tabs>
+	</view>
+</template>
+
+<script>
+	import navBar from '@/components/navBar';
+	export default {
+		components: {
+			navBar
+		},
+		data() {
+			return {
+				typeList1: [],
+				typeList2: [],
+				typeList3: [],
+				value: '',
+				typeListAll: [],
+				title:'',
+				duChaList: [{
+						title: '石家庄岗南水库石家庄岗南水库石家庄岗南水库',
+						type: '小( Ⅰ )型',
+						adress: '河北省平山县西岗南村',
+						date: '2022/03/01  12:00:00',
+						isCheck: '0'
+					},
+					{
+						title: '石家庄岗南水库',
+						type: '',
+						adress: '河北省平山县西岗南村河北省平山县西岗南村河北省平山县西岗南村',
+						date: '2022/03/01  12:00:00',
+						isCheck: '1'
+					},
+					{
+						title: '石家庄岗南水库',
+						type: '',
+						adress: '河北省平山县西岗南村',
+						date: '',
+						isCheck: '2'
+					},
+					{
+						title: '石家庄岗南水库',
+						type: '',
+						adress: '河北省平山县西岗南村',
+						date: '2022/03/01  12:00:00',
+						isCheck: '0'
+					},
+					{
+						title: '石家庄岗南水库',
+						type: '',
+						adress: '河北省平山县西岗南村',
+						date: '2022/03/01  12:00:00',
+						isCheck: '2'
+					},
+				]
+			}
+		},
+		onLoad(option) {
+			this.typeList = JSON.parse(option.typeList)
+			this.typeListAll = JSON.parse(option.typeList)
+			this.title = option.title
+		},
+		methods: {
+			back() {
+				uni.navigateBack({
+					url: '/pages/ducha/ducha'
+				})
+			},
+			detail(target) {
+							console.log(target)
+							if(this.title=='小型水库'){
+								uni.navigateTo({
+									url: "/pages/Smallreservoir/Smallreservoir?title=" + JSON.stringify(target)
+								})
+							}else if(this.title=='水资源管理'){
+								uni.navigateTo({
+									url: "/pages/waterResource/waterResource?title=" + JSON.stringify(target)
+								})
+								
+							}else if(this.title=='水毁工程'){
+								uni.navigateTo({
+									url: "/pages/waterDamage/waterDamage?title=" + JSON.stringify(target)
+								})
+							}else if(this.title=='河湖长制'){
+								uni.navigateTo({
+									url: "/pages/Riversystem/Riversystem?title=" + JSON.stringify(target)
+								})
+							}else if(this.title=='河湖管理'){
+								uni.navigateTo({
+									url: "/pages/Rivermanagement/Rivermanagement?title=" + JSON.stringify(target)
+								})
+							}else if(this.title=='地下水超采'){
+								uni.navigateTo({
+									url: "/pages/Groundwater/Groundwater?title=" + JSON.stringify(target)
+								})
+							}else if(this.title=='饮水安全'){
+								uni.navigateTo({
+									url: "/pages/drinkWater/drinkWater?title=" + JSON.stringify(target)
+								})
+							}
+							
+						},
+			onChange() {
+				console.log(this.value)
+			},
+			onTabChange(val) {
+				console.log(val.detail.title)
+				if (val.detail.title == '全部') {
+					this.typeListAll = this.typeListAll
+				} else if (val.detail.title == '已督查') {
+					this.typeList1 = this.typeList.filter(e => {
+						return e.state == '已督查'
+					})
+				} else if (val.detail.title == '督查中') {
+					this.typeList2 = this.typeList.filter(e => {
+						return e.state == '督查中'
+					})
+				} else if (val.detail.title == '未督查') {
+					this.typeList3 = this.typeList.filter(e => {
+						return e.state == '未督查'
+					})
+				}
+			},
+
+		}
+	}
+</script>
+
+<style lang="less" scoped>
+	.cardBox {
+		margin: 40rpx 40rpx 40rpx 40rpx;
+
+		.card {
+			padding: 20rpx;
+			background: #FFFFFF;
+			border-radius: 12rpx;
+			margin-bottom: 20rpx;
+
+			.title {
+				font-family: HarmonyOS_Sans_SC_Medium;
+				font-size: 32rpx;
+				color: #333333;
+				letter-spacing: 0;
+				font-weight: 500;
+				display: flex;
+
+				.text {
+					flex: 1;
+
+					.tipSuccess {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 20rpx;
+						color: #70CE74;
+						letter-spacing: 0;
+						text-align: center;
+						font-weight: 400;
+						border: 2rpx solid #70CE74;
+						border-radius: 4rpx;
+						padding: 6rpx;
+						margin-left: 40rpx
+					}
+
+					.tipError {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 20rpx;
+						color: #8DADF0;
+						letter-spacing: 0;
+						text-align: center;
+						font-weight: 400;
+						border: 2rpx solid #8DADF0;
+						border-radius: 4rpx;
+						padding: 6rpx;
+						margin-left: 40rpx;
+					}
+
+					.tiping {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 20rpx;
+						color: #DCB77C;
+						letter-spacing: 0;
+						text-align: center;
+						font-weight: 400;
+						border: 2rpx solid #DCB77C;
+						border-radius: 4rpx;
+						padding: 6rpx;
+						margin-left: 40rpx;
+					}
+				}
+
+			}
+
+			.guanli {
+				font-family: HarmonyOS_Sans_SC;
+				font-size: 28rpx;
+				color: #666666;
+				letter-spacing: 0;
+				font-weight: 400;
+				padding-top: 20rpx;
+			}
+
+			.dateBox {
+				display: flex;
+				padding-top: 20rpx;
+				justify-content: space-between;
+
+				.dateText {
+					font-family: HarmonyOS_Sans_SC;
+					font-size: 24rpx;
+					color: #999999;
+					letter-spacing: 0;
+					font-weight: 400;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+
+				.date {
+					min-width: 240rpx;
+					font-family: HarmonyOS_Sans_SC;
+					font-size: 24rpx;
+					color: rgba(40, 99, 219, 0.58);
+					letter-spacing: 0;
+					font-weight: 400;
+				}
+			}
+		}
+	}
+
+	/deep/ .van-search__content {
+		background: #fff;
+	}
+
+	/deep/ .van-tabs__scroll {
+		background-color: rgba(255, 255, 255, 0);
+	}
+
+	/deep/ .van-hairline--top-bottom:after {
+		border-width: 0rpx 0;
+	}
+</style>

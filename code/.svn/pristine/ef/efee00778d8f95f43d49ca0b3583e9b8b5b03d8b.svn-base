@@ -1,0 +1,418 @@
+<template>
+	<view class="Riversystem">
+		<navBar :title="title">
+			<template #left>
+				<van-icon @click="back" name="arrow-left" color="#FFFFFF" />
+			</template>
+			<template #right v-if="!disabled">
+				<view @click="quxiao">
+					取消
+				</view>
+			</template>
+			<template #right v-else>
+				<view @click="bianji">
+					编辑
+				</view>
+			</template>
+		</navBar>
+		<view class="gaowaBox">
+			<view class="gaowabody">
+				<view class="title">
+					<view>基础信息</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view class="gaowaCellBox">
+					<view v-for="(item,index) in cellList" :key="item.key">
+						<view class="cellItem">
+							<label>{{item.label}}</label>
+							<input class="cellInput" type="text" v-model="item.value" placeholder="请输入"
+								:disabled="disabled">
+						</view>
+					</view>
+					<view class="uploadBox">
+						<view class="imgTitle">附件上传</view>
+						<view>
+							<uni-file-picker limit="9" fileMediatype="image" mode="grid" @select="select"
+								@success="success"></uni-file-picker>
+						</view>
+					</view>
+					<view class="title">
+						<view>问题清单</view>
+						<van-icon name="arrow-down" />
+					</view>
+					<view @click="addQuestion" class="bottom" style="margin-bottom: 28rpx;">
+
+						<view v-for="(item,index) in problemList" :key="item.id">
+							<view>
+								<p class="titleHeader">{{item.header}}</p>
+								<view v-for="(item1, index1) in item.list" :key="index1" class="selectBox">
+
+									<label class="problemPieces">{{ item1.desc }}</label>
+									<view class="listAnswer">
+										<picker :data-index="aa" @change="bindPickerChange(index1,$event)" mode="selector" :data-id='item1.id' :value="aa" range-key="label" :range="answerList">
+											<view class="pickerBox">
+												<view class="choice">{{answerList[index]}}
+													<van-icon class='icon' name="arrow" />
+												</view>
+												<view>
+
+												</view>
+
+											</view>
+
+										</picker>
+									</view>
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import navBar from '@/components/navBar';
+	import util from "../../common/request.js"
+	export default {
+		components: {
+			navBar
+		},
+		data() {
+			return {
+				disabled: true,
+				title: "11",
+				aa:[{
+					index1:0
+				},
+				{
+					index2:1
+				},
+				{
+					index3:2
+				},
+				{
+					index4:3
+				},
+				{
+					index5:4
+				},
+				{
+					index6:5
+				},{
+					index7:6
+				},{
+					index8:7
+				},{
+					index9:8
+				}],
+				answerList: ['是', '否'],
+				// answerList: [{
+				// 	label:'是',
+				// 	index:0,
+				// 	id:1
+				// },
+				// {
+				// 	label:'否',
+				// 	index:1,
+				// 	id:2
+				// }],
+				index: 0,
+				cellList: [{
+						label: '取水户名称',
+						key: 'key1',
+						value: ''
+					},
+					{
+						label: '行政区划',
+						key: 'key2',
+						value: ''
+					},
+					{
+						label: '所在地点',
+						key: 'key3',
+						value: ''
+					},
+					{
+						label: '单位代码',
+						key: 'key4',
+						value: ''
+					},
+					{
+						label: '法定代表人',
+						key: 'key5',
+						value: ''
+					},
+					{
+						label: '行业类别',
+						key: 'key6',
+						value: ''
+					},
+					{
+						label: '行业代码',
+						key: 'key7',
+						value: ''
+					},
+					{
+						label: '设计年取水量',
+						key: 'key8',
+						value: ''
+					},
+					{
+						label: '经度',
+						key: 'key9',
+						value: ''
+					},
+					{
+						label: '纬度',
+						key: 'key10',
+						value: ''
+					},
+					{
+						label: '联系人',
+						key: 'key11',
+						value: ''
+					},
+					{
+						label: '联系方式',
+						key: 'key12',
+						value: ''
+					}
+				],
+				problemList: [],
+				tableData: [],
+				// val:0,
+				plaeseSelect:''
+			}
+		},
+		onLoad(option) {
+			let id = {
+				ins_type: '水资源管理'
+			};
+			util.request("inspfillin/getPro_des2", "Get", id, false, false, false, true).then(res => {
+				console.log(res.data);
+				this.tableData = res.data;
+				this.tableData.forEach((item) => {
+					item.list = item.list.map((v) => {
+						return {
+							...v,
+							showBtn: "", //单选按钮选择
+							hasBtn: v.trg_flag != "", //是否显示按钮
+							btnCondition: v.trg_flag == "是", //按钮触发条件
+						};
+					});
+				});
+				this.problemList = this.tableData;
+			})
+		},
+		methods: {
+			// 返回上一个页面
+			back() {
+				uni.navigateBack({
+					url: '/pages/shukuducha/shukuducha'
+				})
+			},
+			bianji() {
+				console.log(111)
+				this.disabled = false
+			},
+			quxiao() {
+				this.disabled = true
+			},
+			// 获取上传状态
+			select(e) {
+				console.log('选择文件：', e)
+			},
+			bindPickerChange(i,e) {
+				console.log(i,e)
+				// const index = e.target.value;
+				
+				// this.plaeseSelect = this.answerList[e.detail.value].label
+				this.index = e.detail.value
+			},
+			addQuestion() {
+
+			}
+		}
+	}
+</script>
+
+<style lang="less" scope>
+	.Riversystem {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+
+		.gaowaBox {
+			flex: 1;
+			overflow: auto;
+
+			.gaowabody {
+				flex: 1;
+				overflow: auto;
+
+				.title {
+					display: flex;
+					justify-content: space-between;
+					font-family: HarmonyOS_Sans_SC_Medium;
+					font-size: 32rpx;
+					color: #333333;
+					letter-spacing: 0;
+					font-weight: 500;
+					padding: 20rpx;
+				}
+
+				.gaowaCellBox {
+					.listAnswer {
+						width: 60px;
+						display: flex;
+					}
+				
+					/deep/.van-icon-arrow:before {
+					    content: "\F00A";
+					    top: -14px;
+					    position: absolute;
+					}
+					.selectBox {
+						display: flex;
+						justify-content: space-between;
+					}
+
+					.titleHeader {
+						font-size: 16px;
+						font-weight: 800;
+						color: black;
+						margin-left: 8px
+					}
+
+					.choice {
+						margin-top: 22px;
+						margin-left: -10px;
+					}
+
+					.problemPieces {
+						width: 270px;
+						height: 62px;
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 14px;
+						color: #454545;
+						font-weight: 400;
+						margin-top: 20px;
+						margin-left: 8px
+					}
+
+					.cellItem {
+						display: flex;
+						justify-content: space-between;
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 32rpx;
+						color: #333333;
+						letter-spacing: 0;
+						font-weight: 400;
+						background: #FFFFFF;
+						padding: 0rpx 20rpx 0rpx 20rpx;
+						border-bottom: 1rpx solid #EBEBEB;
+						height: 96rpx;
+						line-height: 96rpx;
+
+						.cellInput {
+							height: 100%;
+							text-align: right;
+						}
+
+						.pickerBox {
+							width: 60px;
+							display: flex;
+							// position: relative;
+						}
+
+						.left {}
+
+						.right {}
+					}
+
+					.otherCell {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 32rpx;
+						color: #333333;
+						letter-spacing: 0;
+						font-weight: 400;
+						background: #FFFFFF;
+						padding: 32rpx 20rpx 32rpx 20rpx;
+						border-bottom: 2rpx solid #EBEBEB;
+						line-height: 1;
+					}
+
+					.otherText {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 32rpx;
+						color: #333333;
+						letter-spacing: 0;
+						font-weight: 400;
+						background: #FFFFFF;
+						padding: 32rpx 20rpx 32rpx 20rpx;
+						border-bottom: 2rpx solid #EBEBEB;
+					}
+
+					.uploadBox {
+						padding: 0rpx 20rpx 20rpx 20rpx;
+						background: #FFFFFF;
+						border-bottom: 2rpx solid #EBEBEB;
+
+						.imgTitle {
+							font-family: HarmonyOS_Sans_SC;
+							font-size: 32rpx;
+							color: #333333;
+							letter-spacing: 0;
+							font-weight: 400;
+							padding: 26rpx 0rpx 26rpx 0rpx;
+						}
+
+						.imgBox {
+							display: grid;
+							grid-template-columns: repeat(5, 124rpx);
+							grid-gap: 20rpx;
+
+							.imgcell {
+								height: 124rpx;
+
+								.img {
+									width: 100%;
+									height: 100%;
+								}
+							}
+
+						}
+					}
+				}
+
+				.bottom {
+					// height: 800rpx;
+					height: 100%;
+					background: #FFFFFF;
+					// display: flex;
+					// align-items: center;
+					// justify-content: center;
+					margin-bottom: 44rpx;
+
+					.bottomImg {
+						width: 60rpx;
+						height: 18rpx;
+					}
+
+					.addText {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 28rpx;
+						color: #2863DB;
+						letter-spacing: 0;
+						text-align: right;
+						font-weight: 400;
+					}
+				}
+			}
+
+		}
+	}
+</style>
+

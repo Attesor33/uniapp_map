@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256px" height="208px" viewBox="0 0 256 208" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>问题数量</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="228" height="180" rx="12"></rect>
+        <filter x="-9.2%" y="-11.7%" width="118.4%" height="123.3%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="7" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0315837495   0 0 0 0 0.0860353672   0 0 0 0 0.19678442  0 0 0 0.237652972 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" stop-opacity="0.183812281" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0.145541958" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="登陆" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="首页" transform="translate(-490.000000, -382.000000)">
+            <g id="问题数量" transform="translate(504.000000, 396.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="蒙版">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                    <use fill="#EC9738" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <path d="M107.4,205.4 L6.6,205.4 C1.2981,205.4 -3,201.1019 -3,195.8 L-3,90.2 C-3,84.8981 1.2981,80.6 6.6,80.6 L19.4226,80.6 C21.39975,75.0077 26.7306,71 33,71 L81,71 C87.2694,71 92.60025,75.0077 94.5774,80.6 L107.4,80.6 C112.7019,80.6 117,84.8981 117,90.2 L117,195.8 C117,201.1019 112.7019,205.4 107.4,205.4 Z M50.47485,190.5146 C51.72,191.7671 53.28735,192.3896 55.16235,192.3896 C57.03735,192.3896 58.59735,191.7671 59.84985,190.5146 C61.095,189.26945 61.72485,187.7021 61.72485,185.8271 C61.72485,183.9521 61.095,182.3921 59.84985,181.1396 C58.59735,179.89445 57.03735,179.2646 55.16235,179.2646 C53.28735,179.2646 51.72,179.89445 50.47485,181.1396 C49.22235,182.3921 48.59985,183.9521 48.59985,185.8271 C48.59985,187.7021 49.22235,189.2696 50.47485,190.5146 Z M39.0075,136.60835 C41.6427,136.60835 43.84545,134.6405 44.18565,132.0272 C44.65695,128.4059 45.7377,125.6351 47.42805,123.71765 C49.7718,121.06625 52.6575,119.7332 56.1,119.7332 C59.535,119.7332 62.19375,120.75125 64.06875,122.78015 C65.94375,124.81625 66.88125,127.8632 66.88125,131.92085 C66.88125,134.11085 66.4125,136.37405 65.475,138.7178 C64.5375,141.06155 62.81625,143.3321 60.31875,145.5146 C56.8764,148.6421 54.4593,151.53515 53.05305,154.18655 C51.6468,156.8453 50.9436,159.57725 50.9436,162.38975 L50.9436,165.3104 C50.9436,166.28615 51.73455,167.07725 52.71045,167.07725 L57.6144,167.07725 C58.59015,167.07725 59.38125,166.2863 59.38125,165.3104 L59.38125,163.796 C59.38125,162.8585 60.00375,161.1446 61.25625,158.63975 C62.5014,156.14225 64.69125,153.6446 67.81875,151.13975 C70.9389,148.64225 73.44375,145.67585 75.31875,142.2335 C77.19375,138.7985 78.13125,135.0485 78.13125,130.9835 C78.13125,125.05085 76.1757,120.20225 72.2718,116.45225 C68.3607,112.70225 62.97,110.82725 56.09985,110.82725 C49.845,110.82725 44.53485,112.9367 40.16235,117.15545 C36.86535,120.3311 34.72215,124.7933 33.73275,130.53575 C33.18555,133.71185 35.65695,136.6085 38.87985,136.6085 L39.0075,136.6085 L39.0075,136.60835 Z M81,80.6 L33.0999,80.6 C30.4845,80.6 28.27365,82.65065 28.20195,85.26515 C28.12755,87.97775 30.30435,90.2 33.00015,90.2 L80.90025,90.2 C83.51565,90.2 85.7265,88.14935 85.7982,85.53485 C85.8726,82.8224 83.6958,80.6 81,80.6 Z" id="形状" fill="url(#linearGradient-4)" fill-rule="nonzero" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+<!-- Code injected by live-server -->
+<script type="text/javascript">
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script></svg>

@@ -1,0 +1,45 @@
+<template>
+	<view class="Smallreservoir">
+		<navBar :title="title">
+			<template #left>
+				<van-icon @click="back" name="arrow-left" color="#FFFFFF" />
+			</template>
+			<template #right>取消</template>
+		</navBar>
+	</view>
+</template>
+
+<script>
+		import navBar from '@/components/navBar';
+	export default{
+		components: {
+			navBar
+		},
+		data(){
+			return{
+				title:"11",
+				tianBaoList:{}
+			}
+		},
+		onLoad(option){
+			console.log(option.title)
+			this.tianBaoList = JSON.parse(option.title)
+			this.title = 	this.tianBaoList.nm
+		},
+		methods:{
+			back() {
+				uni.navigateBack({
+					url: '/pages/shukuducha/shukuducha'
+				})
+			},
+		}
+	}
+</script>
+
+<style lang="less" scoped>
+	.Smallreservoir{
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+	}
+</style>

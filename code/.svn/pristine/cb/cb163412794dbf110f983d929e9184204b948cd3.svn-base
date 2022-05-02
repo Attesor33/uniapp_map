@@ -1,0 +1,12 @@
+
+<view class="uPImg">
+            <view class="Img">上传照片 :</view>
+            <!-- 上传图片 -->
+            <view class="shangchuan">
+                <view class="sc2" v-for="(item, index) in imgList" :key="index">
+                    <image class="del" @click="del(index)" src="../../static/del.png" mode=""></image>
+                    <image class="Img3" :src="item" mode=""></image>
+                </view>
+                <view class="sc2" v-if="imgList.length < 3" @click="upload"><image class="sc3" src="../../static/upload.png" mode=""></image></view>
+            </view>
+        </view>

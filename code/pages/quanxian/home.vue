@@ -1,0 +1,58 @@
+<template>
+	<view class="home">
+		<view class="Home-header">
+			<view class="jurisdiction" v-for="(item,index) in PermissionData" :key="index" @click="jump(index)">
+				{{item.meta.title}}
+			</view>
+		</view>
+		
+	</view>
+</template>
+
+<script>
+	export default{
+		data(){
+			return {
+				PermissionData:[]
+			}
+		},
+		onLoad(options){
+			this.PermissionData= JSON.parse(options.jurisdiction)
+			// console.log(this.PermissionData)
+		},
+		methods:{
+			jump(index){
+				
+				if(index==0){
+					uni.switchTab({
+						url: '/pages/home/home'
+					});
+				}
+			}
+		}
+	}
+</script>
+
+<style lang="less" scoped>
+	.home{
+		width: 100%;
+		height: 100vh;
+		background: #FFFFFF;
+		.Home-header{
+			padding-top: 150px;
+			.jurisdiction{
+					margin:50px auto;
+					width: 50%;
+					height: 64px;
+					line-height: 64px;
+					padding: 10px;
+					text-align: center;
+					background: blue;
+					color: #FFFFFF;
+				
+			}
+		}
+			
+		
+	}
+</style>

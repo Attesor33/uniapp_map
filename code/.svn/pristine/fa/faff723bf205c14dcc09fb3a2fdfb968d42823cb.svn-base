@@ -1,0 +1,569 @@
+<template>
+	<view class="Smallreservoir">
+		<navBar :title="title">
+			<template #left>
+				<van-icon @click="back" name="arrow-left" color="#FFFFFF" />
+			</template>
+			<template #right v-if="!disabled">
+				<view @click="quxiao">
+					取消
+				</view>
+			</template>
+			<template #right v-else>
+				<view @click="bianji">
+					编辑
+				</view>
+			</template>
+		</navBar>
+		<view class="gaowaBox">
+			<view class="gaowabody">
+				<view class="title">
+					<view>基础信息</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view class="gaowaCellBox">
+					<view v-for="(item,index) in cellList" :key="item.key">
+						<view class="cellItem" v-if="['key8','key9'].includes(item.key)">
+							<label>{{item.label}}</label>
+							<picker @change="handleChange($event,item,cellList)" :value="item.selectIndex"
+								:range="item.list" :disabled="disabled">
+								<view class="pickerBox">
+									<view>{{item.value}}</view>
+									<van-icon name="arrow" />
+								</view>
+							</picker>
+						</view>
+						<view v-else-if="['key5'].includes(item.key)" class="cellItem">
+							<label>{{item.label}}</label>
+
+
+							<picker mode="date" :value="item.value" :start="startDate" :end="endDate"
+								@change="handleChange($event,item,cellList)" :disabled="disabled">
+								<view class="pickerBox">
+									<view>{{item.value}}</view>
+								</view>
+							</picker>
+						</view>
+						<view class="cellItem" v-else>
+							<label>{{item.label}}</label>
+							<input class="cellInput" type="text" v-model="item.value" placeholder="请输入"
+								:disabled="disabled" >
+						</view>
+					</view>
+					<view class="uploadBox">
+						<view class="imgTitle">附件上传</view>
+						<view >
+							<uni-file-picker limit="9"  fileMediatype="image" mode="grid" 
+								@select="select" @success="success"></uni-file-picker>
+						</view>
+					</view>
+				</view>
+				<view class="title">
+					<view>检查情况</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view class="gaowaCellBox">
+					<view v-for="(item,index) in checkList" :key="item.key">
+						<view v-if="item.key==='check2'">
+							<view class="otherCell">{{item.label}}</view>
+							<view class="otherCell" style="font-size: 28rpx;">
+								<textarea maxlength="500" :value="item.value" placeholder="请输入" />
+							</view>
+						</view>
+						<view v-else-if="['key5'].includes(item.key)" class="cellItem">
+							<label>{{item.label}}</label>
+							<!-- <input type="text" value="11111111"> -->
+
+							<picker mode="date" :value="item.value" :start="startDate" :end="endDate"
+								@change="handleChange($event,item,cellList)">
+								<view class="pickerBox">
+									<view>{{item.value}}</view>
+								</view>
+							</picker>
+						</view>
+						<view class="cellItem" v-else-if="['check3','check4','check5'].includes(item.key)">
+							<label>{{item.label}}</label>
+							<picker @change="handleChange($event,item,checkList)" :value="item.selectIndex"
+								:range="item.list">
+								<view class="pickerBox">
+									<view>{{item.list[item.selectIndex]}}</view>
+									<van-icon name="arrow" />
+								</view>
+							</picker>
+						</view>
+
+						<view class="cellItem" v-else>
+							<view class="left">{{item.label}}</view>
+							<view class="right">{{item.value}}</view>
+						</view>
+					</view>
+				</view>
+				<view class="title">
+					<view>问题清单</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view @click="addQuestion" class="bottom" style="margin-bottom: 28rpx;">
+					<image class="bottomImg" src="@/static/images/add.png" mode=""></image>
+					<text class="addText">新增</text>
+				</view>
+				<view class="title">
+					<view>问题整改复查情况</view>
+					<van-icon name="arrow" />
+				</view>
+				<view class="bottom">
+					<image class="bottomImg" src="@/static/images/add.png" mode=""></image>
+					<text class="addText">新增</text>
+				</view>
+			</view>
+		</view>
+		<view class="bottomBtn" @click="preservation">保存</view>
+	</view>
+</template>
+
+<script>
+	import navBar from '@/components/navBar';
+	import util from "../../common/request.js"
+	export default {
+		components: {
+			navBar
+		},
+		data() {
+			return {
+				disabled: true,
+				title: "11",
+				tianBaoList: {},
+				cellList: [{
+						label: '水库名称',
+						key: 'key1',
+						value: ''
+					},
+					{
+						label: '行政区划',
+						key: 'key2',
+						value: ''
+					},
+					{
+						label: '所在地点',
+						key: 'key3',
+						value: ''
+					},
+					{
+						label: '管理机构',
+						key: 'key4',
+						value: ''
+					},
+					{
+						label: '建成时间',
+						key: 'key5',
+						value: new Date().toLocaleDateString()
+					},
+					{
+						label: '注册登记号',
+						key: 'key6',
+						value: ''
+					},
+					{
+						label: '工程规模',
+						key: 'key7',
+						value: ''
+					},
+					{
+						label: '主坝类型（材料）',
+						key: 'key8',
+						value: '',
+						list: ['浆砌石坝', '土坝', '堆石坝', '橡胶坝'],
+						selectIndex: 0
+					},
+					{
+						label: '主坝类型（结构）',
+						key: 'key9',
+						list: ['重力坝', '拱坝', '支墩坝', '均质坝', '心墙坝', '斜墙坝', '面板坝'],
+						selectIndex: 0,
+						value: ''
+					},
+					{
+						label: '总库容（万m3）',
+						key: 'key10',
+						value: ''
+					},
+					{
+						label: '主坝最大坝高（m）',
+						key: 'key11',
+						value: ''
+					},
+					{
+						label: '正常蓄水位',
+						key: 'key12',
+						value: ''
+					},
+					{
+						label: '汛限水位',
+						key: 'key13',
+						value: ''
+					},
+					{
+						label: '经度',
+						key: 'key14',
+						value: ''
+					},
+					{
+						label: '纬度',
+						key: 'key15',
+						value: ''
+					}
+				],
+				checkList: [{
+						label: '检查年度',
+						key: 'check1',
+						value: ''
+					},
+					{
+						label: '原工况评价',
+						key: 'check2',
+						value: ''
+					},
+					{
+						label: '工况总体评价',
+						key: 'check3',
+						value: '',
+						list: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+						selectIndex: 0
+					},
+					{
+						label: '水库检查类型',
+						key: 'check4',
+						value: '',
+						list: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+						selectIndex: 0
+					},
+					{
+						label: '是否到现场',
+						key: 'check5',
+						value: '',
+						list: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+						selectIndex: 0
+					},
+				],
+				information: [],
+				FileList: []
+			}
+		},
+		computed: {
+			startDate() {
+				return this.getDate('start');
+			},
+			endDate() {
+				return this.getDate('end');
+			}
+		},
+		onLoad(option) {
+			// console.log(option.title)
+			this.tianBaoList = JSON.parse(option.title)
+			this.title = this.tianBaoList.nm
+			let id = {
+				obj_id: this.tianBaoList.obj_id,
+				plan_id: this.tianBaoList.plan_id,
+			};
+			util.request("inspfillin/getBasicInfo_res", "Get", id, false, false, false, true).then(res => {
+				console.log(res.data)
+				this.information = res.data
+
+				if (this.information.comp_date == '') {
+					this.cellList[4].value = new Date().toLocaleDateString()
+				}
+				if (this.information.dam_type_mat == "") {
+					this.cellList[7].value = '请选择'
+				}
+				if (this.information.dam_type_str == "") {
+					this.cellList[8].value = '请选择'
+				}
+				this.cellList[0].value = this.information.res_nm
+				this.cellList[1].value = this.information.res_ad
+				this.cellList[2].value = this.information.res_loc
+				this.cellList[3].value = this.information.org_nm
+				this.cellList[4].value = this.information.comp_date
+				this.cellList[5].value = this.information.res_code
+				this.cellList[6].value = this.information.eng_scal
+				this.cellList[7].value = this.information.dam_type_mat
+				this.cellList[8].value = this.information.dam_type_str
+				this.cellList[9].value = this.information.tot_cap
+				this.cellList[10].value = this.information.dam_cre_elv
+				this.cellList[11].value = this.information.nr_wt_lv
+				this.cellList[12].value = this.information.fl_low_lim_lev
+				this.cellList[13].value = this.information.cen_long
+				this.cellList[14].value = this.information.cen_lat
+
+			})
+		},
+		methods: {
+			// 返回上一个页面
+			back() {
+				uni.navigateBack({
+					url: '/pages/shukuducha/shukuducha'
+				})
+			},
+			// 保存数据
+			preservation() {
+				let formList = {
+					uuid: this.tianBaoList.obj_id,
+					plan_id: this.tianBaoList.plan_id,
+					res_nm: this.cellList[0].value,
+					res_ad: this.cellList[1].value,
+					res_loc: this.cellList[2].value,
+					org_nm: this.cellList[3].value,
+					comp_date: this.cellList[4].value,
+					res_code: this.cellList[5].value,
+					eng_scal: this.cellList[6].value,
+					dam_type_mat: this.information.dam_type_mat,
+					dam_type_str: this.information.dam_type_str,
+					tot_cap: this.cellList[9].value,
+					dam_cre_elv: this.cellList[10].value,
+					nr_wt_lv: this.cellList[11].value,
+					fl_low_lim_lev: this.cellList[12].value,
+					cen_long: this.cellList[13].value,
+					cen_lat: this.cellList[14].value,
+					filelist: this.FileList
+				}
+				util.request("inspfillin/saveBasicInfo_res", "POST", formList, false, false, false, true).then(res => {
+					console.log(res)
+					this.disabled = true
+				})
+			},
+			// 时间选择器
+			getDate(type) {
+				const date = new Date();
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
+
+				if (type === 'start') {
+					year = year - 60;
+				} else if (type === 'end') {
+					year = year + 2;
+				}
+				month = month > 9 ? month : '0' + month;
+				day = day > 9 ? day : '0' + day;
+				return `${year}-${month}-${day}`;
+			},
+			// 选择器
+			handleChange(e, target, arr) {
+				console.log(e, target, arr)
+				arr.forEach((item) => {
+					if (item.key === target.key) {
+						if (target.key === 'key5') {
+							item.value = e.detail.value.replace(/\-/g, '/')
+						} else if (target.key === 'key8') {
+							item.selectIndex = e.detail.value
+							item.value = item.list[item.selectIndex]
+							this.information.dam_type_mat = item.list[item.selectIndex]
+						} else if (target.key === 'key9') {
+							item.selectIndex = e.detail.value
+							item.value = item.list[item.selectIndex]
+							this.information.dam_type_str = item.list[item.selectIndex]
+						}
+
+
+
+					}
+				})
+
+			},
+			bianji() {
+				console.log(111)
+				this.disabled = false
+			},
+			quxiao() {
+				this.disabled = true
+			},
+			// 获取上传状态
+			select(e) {
+				console.log('选择文件：', e)
+	
+			
+
+				// util.request("common/upload", "POST", fd, false, false, false, true).then(res => {
+
+				// })
+			},
+			success(e){
+				console.log(e)
+				uni.chooseImage({
+					
+					success: (chooseImageRes) => {
+						const tempFilePaths = e.tempFilePaths;
+						uni.uploadFile({
+							url: 'http://120.27.235.15:8087/ershi_api/common/upload',
+							filePath: tempFilePaths[0],
+							name: 'file',
+							formData: {
+								'user': e.tempFiles[0]
+							},
+								header: {
+									'Authorization': uni.getStorageSync('x-access-token'),
+									// 'Authorization': 'multipart/form-data'
+							
+									// 不需要手动指定 multipart/form-data ，本 API 默认 multipart/form-data 
+									// 手动指定需要计算 boundary 并拼接上 
+								},
+							success: (uploadFileRes) => {
+								console.log(uploadFileRes);
+							}
+						});
+					}
+				});
+			}
+
+		}
+	}
+</script>
+
+<style lang="less" scoped>
+	.Smallreservoir {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+
+		.gaowaBox {
+			flex: 1;
+			overflow: auto;
+
+			.gaowabody {
+				flex: 1;
+				overflow: auto;
+
+				.title {
+					display: flex;
+					justify-content: space-between;
+					font-family: HarmonyOS_Sans_SC_Medium;
+					font-size: 32rpx;
+					color: #333333;
+					letter-spacing: 0;
+					font-weight: 500;
+					padding: 20rpx;
+				}
+
+				.gaowaCellBox {
+					.cellItem {
+						display: flex;
+						justify-content: space-between;
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 32rpx;
+						color: #333333;
+						letter-spacing: 0;
+						font-weight: 400;
+						background: #FFFFFF;
+						padding: 0rpx 20rpx 0rpx 20rpx;
+						border-bottom: 1rpx solid #EBEBEB;
+						height: 96rpx;
+						line-height: 96rpx;
+
+						.cellInput {
+							height: 100%;
+							text-align: right;
+						}
+
+						.pickerBox {
+							display: flex;
+						}
+
+						.left {}
+
+						.right {}
+					}
+
+					.otherCell {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 32rpx;
+						color: #333333;
+						letter-spacing: 0;
+						font-weight: 400;
+						background: #FFFFFF;
+						padding: 32rpx 20rpx 32rpx 20rpx;
+						border-bottom: 2rpx solid #EBEBEB;
+						line-height: 1;
+					}
+
+					.otherText {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 32rpx;
+						color: #333333;
+						letter-spacing: 0;
+						font-weight: 400;
+						background: #FFFFFF;
+						padding: 32rpx 20rpx 32rpx 20rpx;
+						border-bottom: 2rpx solid #EBEBEB;
+					}
+
+					.uploadBox {
+						padding: 0rpx 20rpx 20rpx 20rpx;
+						background: #FFFFFF;
+						border-bottom: 2rpx solid #EBEBEB;
+
+						.imgTitle {
+							font-family: HarmonyOS_Sans_SC;
+							font-size: 32rpx;
+							color: #333333;
+							letter-spacing: 0;
+							font-weight: 400;
+							padding: 26rpx 0rpx 26rpx 0rpx;
+						}
+
+						.imgBox {
+							display: grid;
+							grid-template-columns: repeat(5, 124rpx);
+							grid-gap: 20rpx;
+
+							.imgcell {
+								height: 124rpx;
+
+								.img {
+									width: 100%;
+									height: 100%;
+								}
+							}
+
+						}
+					}
+				}
+
+				.bottom {
+					height: 80rpx;
+					background: #FFFFFF;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					margin-bottom: 44rpx;
+
+					.bottomImg {
+						width: 60rpx;
+						height: 18rpx;
+					}
+
+					.addText {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 28rpx;
+						color: #2863DB;
+						letter-spacing: 0;
+						text-align: right;
+						font-weight: 400;
+					}
+				}
+			}
+
+		}
+
+		.bottomBtn {
+			height: 90rpx;
+			background: #2862DB;
+			border: 1rpx solid #979797;
+			font-family: HarmonyOS_Sans_SC;
+			font-size: 32rpx;
+			color: #FFFFFF;
+			letter-spacing: 0;
+			font-weight: 400;
+			text-align: center;
+			line-height: 90rpx;
+		}
+
+	}
+</style>

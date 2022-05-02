@@ -1,0 +1,714 @@
+<template>
+	<view class="box">
+		<navBar :title="title">
+			<template #left>
+				<van-icon @click="back" name="arrow-left" color="#FFFFFF" />
+			</template>
+
+			<template #right v-if="isEdit" @click="editFrom">编辑</template>
+			<template #right v-else>取消</template>
+		</navBar>
+		<view v-if="readOnly" class="gaowaBox">
+			<view class="gaowabody">
+				<view class="title">
+					<view>基础信息</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view class="gaowaCellBox">
+					<view class="cellItem" v-for="(item,index) in cellList" :key="item.key">
+						<view class="left">{{item.label}}</view>
+						<view class="right">{{item.value}}</view>
+					</view>
+					<view class="uploadBox">
+						<view class="imgTitle">附件上传</view>
+						<view class="imgBox">
+							<view class="imgcell" v-for="(url,key) in imglist" :key="key">
+								<image class="img" :src="url"></image>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="title">
+					<view>检查情况</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view class="gaowaCellBox">
+					<view v-for="(item,index) in checkList" :key="item.key">
+						<view v-if="item.key==='check2'">
+							<view class="otherCell">{{item.label}}</view>
+							<view class="otherText">{{item.value}}</view>
+						</view>
+						<view class="cellItem" v-else>
+							<view class="left">{{item.label}}</view>
+							<view class="right">{{item.value}}</view>
+						</view>
+					</view>
+				</view>
+				<view class="title">
+					<view>问题清单</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view class="gaowaCellBox">
+					<view v-for="(item,index) in quesLit" :key="item.key">
+						<view class="cellItem">
+							<view class="left">{{item.value}}</view>
+							<view class="right" style="color:#2863DB;">{{item.label}}
+								<van-icon color="#2863DB;" name="arrow"
+									style="vertical-align: middle;margin-left:10rpx;" />
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="title">
+					<view>问题整改复查情况</view>
+					<van-icon name="arrow" />
+				</view>
+				<view class="bottom">
+					<image class="bottomImg" src="@/static/images/tz.png" mode=""></image>
+				</view>
+			</view>
+		</view>
+		<view v-if="readOnly" class="bottomBtn">最终审核</view>
+		<view v-if="isAdd" class="gaowaBox">
+			<view class="gaowabody">
+				<view class="title">
+					<view>基础信息</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view class="gaowaCellBox">
+					<view v-for="(item,index) in cellList" :key="item.key">
+						<view class="cellItem" v-if="['key8','key9'].includes(item.key)">
+							<label>{{item.label}}</label>
+							<picker @change="handleChange($event,item,cellList)" :value="item.selectIndex"
+								:range="item.list">
+								<view class="pickerBox">
+									<view>{{item.list[item.selectIndex]}}</view>
+									<van-icon name="arrow" />
+								</view>
+							</picker>
+						</view>
+						<view v-else-if="['key5'].includes(item.key)" class="cellItem">
+							<label>{{item.label}}</label>
+							<!-- <input type="text" value="11111111"> -->
+						
+							<picker mode="date" :value="item.value" :start="startDate" :end="endDate"
+								@change="handleChange($event,item,cellList)">
+								<view class="pickerBox">
+									<view>{{item.value}}</view>
+								</view>
+							</picker>
+						</view>
+						<view class="cellItem" v-else>
+							<label>{{item.label}}</label>
+							<input class="cellInput" type="text" v-model="item.value" placeholder="请输入">
+						</view>
+					</view>
+					<view class="uploadBox">
+						<view class="imgTitle">附件上传</view>
+						<view class="example-body">
+							<uni-file-picker limit="9"></uni-file-picker>
+						</view>
+					</view>
+				</view>
+				<view class="title">
+					<view>检查情况</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view class="gaowaCellBox">
+					<view v-for="(item,index) in checkList" :key="item.key">
+						<view v-if="item.key==='check2'">
+							<view class="otherCell">{{item.label}}</view>
+							<view class="otherCell" style="font-size: 28rpx;">
+								<textarea maxlength="500" :value="item.value" placeholder="请输入" />
+							</view>
+						</view>
+						<view v-else-if="['key5'].includes(item.key)" class="cellItem">
+							<label>{{item.label}}</label>
+							<!-- <input type="text" value="11111111"> -->
+
+							<picker mode="date" :value="item.value" :start="startDate" :end="endDate"
+								@change="handleChange($event,item,cellList)">
+								<view class="pickerBox">
+									<view>{{item.value}}</view>
+								</view>
+							</picker>
+						</view>
+						<view class="cellItem" v-else-if="['check3','check4','check5'].includes(item.key)">
+							<label>{{item.label}}</label>
+							<picker @change="handleChange($event,item,checkList)" :value="item.selectIndex"
+								:range="item.list">
+								<view class="pickerBox">
+									<view>{{item.list[item.selectIndex]}}</view>
+									<van-icon name="arrow" />
+								</view>
+							</picker>
+						</view>
+
+						<view class="cellItem" v-else>
+							<view class="left">{{item.label}}</view>
+							<view class="right">{{item.value}}</view>
+						</view>
+					</view>
+				</view>
+				<view class="title">
+					<view>问题清单</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view @click="addQuestion" class="bottom" style="margin-bottom: 28rpx;">
+					<image class="bottomImg" src="@/static/images/add.png" mode=""></image>
+					<text class="addText">新增</text>
+				</view>
+				<view class="title">
+					<view>问题整改复查情况</view>
+					<van-icon name="arrow" />
+				</view>
+				<view class="bottom">
+					<image class="bottomImg" src="@/static/images/add.png" mode=""></image>
+					<text class="addText">新增</text>
+				</view>
+			</view>
+		</view>
+		<view v-if="isEdit" class="gaowaBox">
+			<view class="gaowabody">
+				<view class="title">
+					<view>基础信息</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view class="gaowaCellBox">
+					<view v-for="(item,index) in cellList" :key="item.key">
+						<view v-if="['key5'].includes(item.key)" class="cellItem">
+							<label>{{item.label}}</label>
+							<!-- <input type="text" value="11111111"> -->
+							<picker mode="date" :value="item.value" :start="startDate" :end="endDate"
+								@change="handleChange($event,item,cellList)">
+								<view class="pickerBox">
+									<view>{{item.value}}</view>
+								</view>
+							</picker>
+						</view>
+						<view class="cellItem" v-else-if="['key8','key9'].includes(item.key)">
+							<label>{{item.label}}</label>
+							<picker @change="handleChange($event,item,cellList)" :value="item.selectIndex"
+								:range="item.list">
+								<view class="pickerBox">
+									<view>{{item.list[item.selectIndex]}}</view>
+									<van-icon name="arrow" />
+								</view>
+							</picker>
+						</view>
+
+						<view class="cellItem" v-else>
+							<label>{{item.label}}</label>
+							<input class="cellInput" type="text" v-model="item.value" placeholder="请输入">
+						</view>
+					</view>
+					<view class="uploadBox">
+						<view class="imgTitle">附件上传</view>
+						<view class="imgBox">
+							<view class="example-body">
+								<uni-file-picker limit="9"></uni-file-picker>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="title">
+					<view>检查情况</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view class="gaowaCellBox">
+					<view v-for="(item,index) in checkList" :key="item.key">
+						<view v-if="item.key==='check2'">
+							<view class="otherCell">{{item.label}}</view>
+							<view class="otherCell" style="font-size: 28rpx;">
+								<textarea maxlength="500" :value="item.value" placeholder="请输入" />
+							</view>
+						</view>
+						<view class="cellItem" v-else-if="['check3','check4','check5'].includes(item.key)">
+							<label>{{item.label}}</label>
+							<picker @change="handleChange($event,item,checkList)" :value="item.selectIndex"
+								:range="item.list">
+								<view class="pickerBox">
+									<view>{{item.list[item.selectIndex]}}</view>
+									<van-icon name="arrow" />
+								</view>
+							</picker>
+						</view>
+						<view class="cellItem" v-else>
+							<view class="left">{{item.label}}</view>
+							<view class="right">{{item.value}}</view>
+						</view>
+					</view>
+				</view>
+				<view class="title">
+					<view>问题清单</view>
+					<van-icon name="arrow-down" />
+				</view>
+				<view class="gaowaCellBox">
+					<view v-for="(item,index) in quesLit" :key="item.key">
+						<van-swipe-cell right-width=" 65 " :async-close="true" @close="onClose">
+							<view class="cellItem">
+								<view class="left">{{item.value}}</view>
+								<view class="right" style="color:#2863DB;">{{item.label}}
+									<van-icon color="#2863DB;" name="arrow"
+										style="vertical-align: middle;margin-left:10rpx;" />
+								</view>
+							</view>
+							<view slot="right" class="van-swipe-cell__right">删除</view>
+						</van-swipe-cell>
+					</view>
+				</view>
+				<view class="bottom" style="margin-bottom: 0rpx;">
+					<image class="bottomImg" src="@/static/images/add.png" mode=""></image>
+					<text class="addText">新增</text>
+				</view>
+				<view class="title">
+					<view>问题整改复查情况</view>
+					<van-icon name="arrow" />
+				</view>
+				<view class="bottom">
+					<image class="bottomImg" src="@/static/images/tz.png" mode=""></image>
+				</view>
+			</view>
+			<!-- <view class="bottomBtn">保存</view> -->
+		</view>
+		<view v-if="!readOnly" class="bottomBtn" @click="preservation">保存</view>
+	</view>
+</template>
+
+<script>
+	import navBar from '@/components/navBar';
+	export default {
+
+		components: {
+			navBar
+		},
+		data() {
+			return {
+				title: '高洼水库',
+				readOnly: false,
+				isEdit: false,
+				isAdd: true,
+				fileList: [],
+				filinList: {},
+				cellList: [{
+						label: '水库名称',
+						key: 'key1',
+						value: ''
+					},
+					{
+						label: '行政区划',
+						key: 'key2',
+						value: ''
+					},
+					{
+						label: '所在地点',
+						key: 'key3',
+						value: ''
+					},
+					{
+						label: '管理机构',
+						key: 'key4',
+						value: '',
+					},
+					{
+						label: '建成时间',
+						key: 'key5',
+						value: new Date().toLocaleDateString()
+					},
+					{
+						label: '注册登记号',
+						key: 'key6',
+						value: ''
+					},
+					{
+						label: '工程规模',
+						key: 'key7',
+						value: ''
+					},
+					{
+						label: '主坝类型（材料）',
+						key: 'key8',
+						value: '',
+						list: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+						selectIndex: 0
+					},
+					{
+						label: '主坝类型（结构）',
+						key: 'key9',
+						value: '',
+						list: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+						selectIndex: 0
+					},
+					{
+						label: '总库容（万m3）',
+						key: 'key10',
+						value: ''
+					},
+					{
+						label: '主坝最大坝高（m）',
+						key: 'key11',
+						value: ''
+					},
+					{
+						label: '正常蓄水位',
+						key: 'key12',
+						value: ''
+					},
+					{
+						label: '汛限水位',
+						key: 'key13',
+						value: ''
+					},
+					{
+						label: '经度',
+						key: 'key14',
+						value: ''
+					},
+					{
+						label: '纬度',
+						key: 'key15',
+						value: ''
+					}
+				],
+				apiObj: {
+					'key1': '岗南水库',
+					'key2': '平山县',
+					'key3': '平山县西岗南村',
+					'key4': '平山县水利资源',
+					'key5': '2008/02/03',
+					'key6': '3167623247',
+					'key7': '较大',
+					'key8': '混凝土坝',
+					'key9': '重力坝',
+					'key10': '123',
+					'key11': '34',
+					'key12': '12m',
+					'key13': '24m',
+					'key14': '23.456',
+					'key15': '23.567'
+				},
+				imglist: [
+					require('@/assets/b11083c6934a9dca93d410b13614f60f.png'),
+					require('@/assets/b11083c6934a9dca93d410b13614f60f.png'),
+					require('@/assets/b11083c6934a9dca93d410b13614f60f.png'),
+					require('@/assets/b11083c6934a9dca93d410b13614f60f.png'),
+					require('@/assets/b11083c6934a9dca93d410b13614f60f.png'),
+					require('@/assets/b11083c6934a9dca93d410b13614f60f.png'),
+					require('@/assets/b11083c6934a9dca93d410b13614f60f.png'),
+					require('@/assets/b11083c6934a9dca93d410b13614f60f.png'),
+					require('@/assets/b11083c6934a9dca93d410b13614f60f.png'),
+					require('@/assets/b11083c6934a9dca93d410b13614f60f.png'),
+					require('@/assets/b11083c6934a9dca93d410b13614f60f.png'),
+				],
+				checkList: [{
+						label: '检查年度',
+						key: 'check1',
+						value: ''
+					},
+					{
+						label: '原工况评价',
+						key: 'check2',
+						value: ''
+					},
+					{
+						label: '工况总体评价',
+						key: 'check3',
+						value: '',
+						list: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+						selectIndex: 0
+					},
+					{
+						label: '水库检查类型',
+						key: 'check4',
+						value: '',
+						list: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+						selectIndex: 0
+					},
+					{
+						label: '是否到现场',
+						key: 'check5',
+						value: '',
+						list: ['杭州', '宁波', '温州', '嘉兴', '湖州'],
+						selectIndex: 0
+					},
+				],
+				checkobj: {
+					'check1': '2022年',
+					'check2': '工况评价内容工况评价内容工况评价内容工况评价内容工况评价内容工况评价内容工况评价内容工况评价内容工况评价内容工况评价内容工况评价内容工况评价内容',
+					'check3': '正常安全运行',
+					'check4': '其他',
+					'check5': '是',
+				},
+				quesLit: [{
+						label: '查看',
+						key: 'ques1',
+						value: ''
+					},
+					{
+						label: '查看',
+						key: 'ques2',
+						value: ''
+					},
+				],
+				quesobj: {
+					'ques1': '三个重点环节落实情况',
+					'ques2': '三个重点环节落实情况',
+				},
+			}
+		},
+		onLoad(option) {
+			this.filinList = JSON.parse(option.title)
+			this.title = this.filinList.nm
+			this.cellList[0].value = this.filinList.nm
+			this.cellList[3].value = this.filinList.org
+			if (!this.isAdd) {
+				this.cellList.forEach((item) => {
+					if (this.apiObj.hasOwnProperty(item.key)) {
+						item.value = this.apiObj[item.key]
+					}
+				})
+				this.checkList.forEach((item) => {
+					if (this.checkobj.hasOwnProperty(item.key)) {
+						item.value = this.checkobj[item.key]
+					}
+				})
+				this.quesLit.forEach((item) => {
+					if (this.quesobj.hasOwnProperty(item.key)) {
+						item.value = this.quesobj[item.key]
+					}
+				})
+
+			}
+
+
+
+		},
+		computed: {
+			startDate() {
+				return this.getDate('start');
+			},
+			endDate() {
+				return this.getDate('end');
+			}
+		},
+		methods: {
+			addQuestion() {
+				uni.navigateTo({
+					url: '/pages/question/question'
+				})
+			},
+			back() {
+				uni.navigateBack({
+					url: '/pages/shukuducha/shukuducha'
+				})
+			},
+			editFrom() {
+
+			},
+			getDate(type) {
+				const date = new Date();
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
+
+				if (type === 'start') {
+					year = year - 60;
+				} else if (type === 'end') {
+					year = year + 2;
+				}
+				month = month > 9 ? month : '0' + month;
+				day = day > 9 ? day : '0' + day;
+				return `${year}-${month}-${day}`;
+			},
+			onClose({
+				detail
+			}) {},
+			handleChange(e, target, arr) {
+				arr.forEach((item) => {
+					if (item.key === target.key) {
+						if (target.key === 'key5') {
+							item.value = e.detail.value.replace(/\-/g, '/')
+							console.log(item.value)
+						} else {
+							item.selectIndex = e.detail.value
+						}
+
+					}
+				})
+
+			},
+			preservation() {
+				console.log(this.cellList)
+			}
+		}
+	}
+</script>
+
+<style lang="less" scoped>
+	.box {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+
+		.gaowaBox {
+			flex: 1;
+			overflow: auto;
+
+			.gaowabody {
+				flex: 1;
+				overflow: auto;
+
+				.title {
+					display: flex;
+					justify-content: space-between;
+					font-family: HarmonyOS_Sans_SC_Medium;
+					font-size: 32rpx;
+					color: #333333;
+					letter-spacing: 0;
+					font-weight: 500;
+					padding: 20rpx;
+				}
+
+				.gaowaCellBox {
+					.cellItem {
+						display: flex;
+						justify-content: space-between;
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 32rpx;
+						color: #333333;
+						letter-spacing: 0;
+						font-weight: 400;
+						background: #FFFFFF;
+						padding: 0rpx 20rpx 0rpx 20rpx;
+						border-bottom: 1rpx solid #EBEBEB;
+						height: 96rpx;
+						line-height: 96rpx;
+
+						.cellInput {
+							height: 100%;
+							text-align: right;
+						}
+
+						.pickerBox {
+							display: flex;
+						}
+
+						.left {}
+
+						.right {}
+					}
+
+					.otherCell {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 32rpx;
+						color: #333333;
+						letter-spacing: 0;
+						font-weight: 400;
+						background: #FFFFFF;
+						padding: 32rpx 20rpx 32rpx 20rpx;
+						border-bottom: 2rpx solid #EBEBEB;
+						line-height: 1;
+					}
+
+					.otherText {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 32rpx;
+						color: #333333;
+						letter-spacing: 0;
+						font-weight: 400;
+						background: #FFFFFF;
+						padding: 32rpx 20rpx 32rpx 20rpx;
+						border-bottom: 2rpx solid #EBEBEB;
+					}
+
+					.uploadBox {
+						padding: 0rpx 20rpx 20rpx 20rpx;
+						background: #FFFFFF;
+						border-bottom: 2rpx solid #EBEBEB;
+
+						.imgTitle {
+							font-family: HarmonyOS_Sans_SC;
+							font-size: 32rpx;
+							color: #333333;
+							letter-spacing: 0;
+							font-weight: 400;
+							padding: 26rpx 0rpx 26rpx 0rpx;
+						}
+
+						.imgBox {
+							display: grid;
+							grid-template-columns: repeat(5, 124rpx);
+							grid-gap: 20rpx;
+
+							.imgcell {
+								height: 124rpx;
+
+								.img {
+									width: 100%;
+									height: 100%;
+								}
+							}
+
+						}
+					}
+				}
+
+				.bottom {
+					height: 80rpx;
+					background: #FFFFFF;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					margin-bottom: 44rpx;
+
+					.bottomImg {
+						width: 60rpx;
+						height: 18rpx;
+					}
+
+					.addText {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 28rpx;
+						color: #2863DB;
+						letter-spacing: 0;
+						text-align: right;
+						font-weight: 400;
+					}
+				}
+			}
+
+		}
+
+		.bottomBtn {
+			height: 90rpx;
+			background: #2862DB;
+			border: 1rpx solid #979797;
+			font-family: HarmonyOS_Sans_SC;
+			font-size: 32rpx;
+			color: #FFFFFF;
+			letter-spacing: 0;
+			font-weight: 400;
+			text-align: center;
+			line-height: 90rpx;
+		}
+	}
+
+	page {
+		padding: 0;
+	}
+
+	/deep/ uni-textarea {
+		width: 100%;
+	}
+
+	.van-swipe-cell__right {
+		display: inline-block;
+		width: 130rpx;
+		height: 88rpx;
+		font-size: 30rpx;
+		line-height: 88rpx;
+		color: #fff;
+		text-align: center;
+		background-color: #C23B3B;
+	}
+</style>

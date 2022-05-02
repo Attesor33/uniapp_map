@@ -1,0 +1,283 @@
+<template>
+	<view class="duchaPage">
+		<view class="tabContanir">
+			<view class="tabBox">
+				<view v-for="(item,index) in tabsMore" :key="index" class="imgBox">
+					<view class="titleBox">
+						<image class="img" :src="item.url" mode="widthFix" @click="Fillin(item.text)"></image>
+					</view>
+					<view class="text">{{item.text}}</view>
+				</view>
+			</view>
+		</view>
+		<view class="searchBox">
+			<view class="searchInput">
+				<view class="left">
+					<view class="top">
+						<input class="uni-input topInput" v-model="value" />
+						<van-icon name="close" @click="clearInput" />
+					</view>
+					<view class="bottom">
+						<input class="uni-input" placeholder="在此输入督查组" />
+					</view>
+				</view>
+				<view class="searchBtn">
+					<van-icon name="search" color="#fff" size="40rpx" class="search" />
+				</view>
+			</view>
+		</view>
+		<view class="cardBox">
+			<view class="card" v-for="(item,index) in cardObj" :key="index" @click="toDetail(item)">
+				<view class="title">
+					<view class="text">{{item.pnm}}</view>
+					<van-icon name="arrow" class="arrow" color="#999" />
+				</view>
+				<view class="guanli">{{item.ins_type}}</view>
+				<view class="date">{{item.sttm}} ~ {{item.entm}}</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import util from "../../common/request.js"
+	export default {
+		data() {
+			return {
+				cardObj: [
+
+				],
+				tabsMore: [{
+						url: require('@/static/images/qb.png'),
+						text: '全部'
+					},
+					{
+						url: require('@/static/images/szy.png'),
+						text: '水资源管理'
+					},
+					{
+						url: require('@/static/images/shgc.png'),
+						text: '水毁工程'
+					},
+					{
+						url: require('@/static/images/xxsk.png'),
+						text: '小型水库'
+					},
+					{
+						url: require('@/static/images/dxs.png'),
+						text: '地下水'
+					},
+					{
+						url: require('@/static/images/yys.png'),
+						text: '饮用水'
+					},
+					{
+						url: require('@/static/images/hh.png'),
+						text: '河湖'
+					},
+					{
+						url: require('@/static/images/hhc.png'),
+						text: '河湖长'
+					},
+				],
+				value: '',
+				title: '水库督查'
+			}
+		},
+		onLoad() {
+			let data = {}
+			util.request("insplan/getInsPlanList", "Get", data, false, false, false, true).then(res => {
+				// console.log(res)
+				this.cardObj = res.data
+			})
+		},
+		methods: {
+			toDetail(item) {
+			
+				let form = {
+					ins_type:item.ins_type
+				}
+				util.request("inspfillin/getInspFillinList", "Get", form, false, false, false, true).then(res => {
+					
+				
+					  res.data.forEach((e) => {
+					          if (e.uptm == "" || e.uptm == null) {
+					            e.uptm = e.uptm;
+					          } else {
+					            let date = e.uptm;
+					            // .replace("T", " ").replace("+0800", "");
+					            var dates = new Date(date).toJSON();
+					            e.uptm = new Date(+new Date(dates) + 8 * 3600 * 1000)
+					              .toISOString()
+					              .replace(/T/g, " ")
+					              .replace(/\.[\d]{3}Z/, "");
+					            // e.intm = date;
+					          }
+					        });
+						let typeList = JSON.stringify(res.data)
+					console.log(res.data)
+					uni.navigateTo({
+						url: "/pages/shukuducha/shukuducha?typeList=" + typeList
+					})
+
+				})
+			},
+			clearInput() {
+				console.log(this.value)
+				this.value = ''
+			},
+			Fillin(text) {
+				console.log(text)
+			}
+		}
+	}
+</script>
+
+<style lang="less" scoped>
+	.duchaPage {
+		position: relative;
+
+		.tabContanir {
+			background: #2863DB;
+			width: 100%;
+			overflow-x: scroll;
+			height: 250rpx;
+
+			// marg
+			.tabBox {
+				display: flex;
+				flex-wrap: nowrap;
+				overflow: hidden;
+				width: max-content;
+				padding-top: 90rpx;
+
+				.imgBox {
+					padding-left: 32rpx;
+					position: relative;
+
+					.titleBox {
+						width: 76rpx;
+						height: 76rpx;
+						border: 2rpx solid #FFFFFF;
+						border-radius: 50%;
+						position: relative;
+						left: 50%;
+						transform: translateX(-50%);
+
+						.img {
+							position: absolute;
+							top: 50%;
+							left: 50%;
+							transform: translate(-50%, -50%);
+							width: 36rpx;
+							height: 36rpx;
+						}
+
+					}
+
+					.text {
+						font-family: HarmonyOS_Sans_SC;
+						font-size: 28rpx;
+						color: rgba(255, 255, 255, 0.50);
+						letter-spacing: 0;
+						text-align: center;
+					}
+				}
+
+			}
+
+		}
+
+		.searchBox {
+			width: 710rpx;
+			background: #FFFFFF;
+			border: 2rpx solid #2862DB;
+			box-shadow: 0rpx 0rpx 18rpx 0rpx rgba(0, 0, 0, 0.09);
+			border-radius: 28rpx;
+			position: absolute;
+			top: 220rpx;
+			left: 50%;
+			z-index: 99;
+			transform: translateX(-50%);
+
+			.searchInput {
+				display: flex;
+				padding: 20rpx 24rpx 20rpx 30rpx;
+
+				.left {
+					flex: 1;
+
+					.top {
+						border-bottom: 1rpx solid #EBEBEB;
+						display: flex;
+						justify-content: space-between;
+
+						.topInput {
+							flex: 1;
+						}
+					}
+
+					.bottom {
+						padding-top: 20rpx;
+					}
+				}
+			}
+
+			.searchBtn {
+				margin-left: 40rpx;
+				width: 17%;
+				background: #4F83EF;
+				border-radius: 32rpx;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		}
+
+		.cardBox {
+			margin: 19% 40rpx 40rpx 40rpx;
+
+			.card {
+				padding: 20rpx;
+				background: #FFFFFF;
+				border-radius: 12rpx;
+				margin-bottom: 20rpx;
+
+				.title {
+					font-family: HarmonyOS_Sans_SC_Medium;
+					font-size: 32rpx;
+					color: #333333;
+					letter-spacing: 0;
+					font-weight: 500;
+					display: flex;
+
+					.text {
+						flex: 1;
+					}
+				}
+
+				.guanli {
+					font-family: HarmonyOS_Sans_SC_Medium;
+					font-size: 28rpx;
+					color: #2862DB;
+					letter-spacing: 0;
+					font-weight: 500;
+					padding-top: 20rpx;
+				}
+
+				.date {
+					font-family: HarmonyOS_Sans_SC;
+					font-size: 28rpx;
+					color: #999999;
+					letter-spacing: 0;
+					font-weight: 400;
+					padding-top: 20rpx;
+				}
+			}
+		}
+	}
+
+	.tabContanir::-webkit-scrollbar {
+		display: none
+	}
+</style>
