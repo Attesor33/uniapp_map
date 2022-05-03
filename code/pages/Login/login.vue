@@ -15,7 +15,7 @@
 			<!-- 占位 -->
 		</view>
 		<view class="Login-content">
-			<uni-forms ref="form" :modelValue="formData" :rules="rules">
+			<!-- <uni-forms ref="form" :modelValue="formData" :rules="rules">
 				<uni-forms-item label="账号" name="name">
 					<input class="input" v-model="formData.name" type="text" placeholder="请输入账号"
 						@input="binddata('email',$event.detail.value)" />
@@ -29,7 +29,7 @@
 					</view>
 
 				</uni-forms-item>
-			</uni-forms>
+			</uni-forms> -->
 			<button @click="submit()" class="Login-submit">登 录</button>
 		</view>
 		<view>
