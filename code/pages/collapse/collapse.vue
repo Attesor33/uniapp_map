@@ -1,51 +1,6 @@
 <template>
   <div class="app">
-    <wrap title="基础用法">
-      <van-rate
-        custom-class="van-rate"
-        data-key="value1"
-        :value="value1"
-        @change="onChange"
-      />
-      {{ value1 }}
-    </wrap>
-
-    <wrap title="自定义图标">
-      <van-rate
-        custom-class="van-rate"
-        icon="like"
-        void-icon="like-o"
-        data-key="value2"
-        :value="value2"
-        @change="onChange"
-      />
-      {{ value2 }}
-    </wrap>
-
-    <wrap title="自定义样式">
-      <van-rate
-        custom-class="van-rate"
-        data-key="value3"
-        :value="value3"
-        size=" 25 "
-        count=" 6 "
-        color="#2ba"
-        void-color="#ceefe8"
-        @change="onChange"
-      />
-      {{ value3 }}
-    </wrap>
-
-    <wrap title="禁用状态">
-      <van-rate
-        custom-class="van-rate"
-        data-key="value4"
-        :value="value4"
-        :disabled="true"
-      />
-      {{ value4 }}
-    </wrap>
-    <van-toast id="van-toast" />
+	核查
   </div>
 </template>
 
@@ -71,39 +26,12 @@ export default {
     wrap,
   },
   onTabItemTap(e){
-  	uni.showModal({
-  	    title: '提示',
-  	    content: '正在开发中！',
-  	    success: function (res) {
-  	        if (res.confirm) {
-  	            uni.switchTab({
-  	            	url:"/pages/home/home"
-  	            });
-  	        } else if (res.cancel) {
-  	           uni.switchTab({
-  	           	url:"/pages/home/home"
-  	           });
-  	        }
-  	    }
-  	})
+  	
   },
   onLoad() {
-  	uni.showModal({
-  	    title: '提示',
-  	    content: '正在开发中！',
-  	    success: function (res) {
-  	        if (res.confirm) {
-  	            uni.switchTab({
-  	            	url:"/pages/home/home"
-  	            });
-  	        } else if (res.cancel) {
-  	           uni.switchTab({
-  	           	url:"/pages/home/home"
-  	           });
-  	        }
-  	    }
-  	})
+	  
   }
+
 };
 </script>
 

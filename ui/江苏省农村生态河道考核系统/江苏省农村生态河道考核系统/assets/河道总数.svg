@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>河道总数</title>
+    <defs>
+        <linearGradient x1="0%" y1="6.60953304%" x2="100%" y2="93.390467%" id="linearGradient-1">
+            <stop stop-color="#01D26D" offset="0%"></stop>
+            <stop stop-color="#28B172" offset="100%"></stop>
+        </linearGradient>
+        <path d="M22.0393333,18.8313333 C22.0393333,18.8313333 24.3353333,13.4373333 19.0793333,11.978 C15.5306667,10.9926667 16.206,10.374 16.8406667,9.72733333 C17.8106667,8.73933333 13.4733333,8.75 13.9206667,8.694 C14.302,9.06933333 15.526,9.50533333 14.8133333,10.04 C14.302,10.4233333 11.906,11.0006667 14.8133333,12.7353333 C16.4466667,13.7093333 15.676,15.57 13.648,17.3993333 C12.4446667,18.4853333 10.8953333,19.7873333 9,21.306 L20.3413333,21.306 C21.496,20.0506667 22.0393333,18.8313333 22.0393333,18.8313333 Z" id="path-2"></path>
+        <filter x="-48.0%" y="-43.6%" width="196.0%" height="203.1%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.140708775   0 0 0 0 0.77918365   0 0 0 0 0.471063934  0 0 0 0.78071989 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="首页" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1-0首页" transform="translate(-32.000000, -228.000000)">
+            <g id="河道总数" transform="translate(32.000000, 228.000000)">
+                <g id="编组-19">
+                    <circle id="椭圆形" fill="#E9F7F1" cx="16" cy="16" r="16"></circle>
+                    <g id="路径">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                        <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+                    </g>
+                </g>
+                <g id="编组-3" transform="translate(8.000000, 7.000000)">
+                    <rect id="矩形" x="0" y="0" width="16" height="16"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -511,23 +511,23 @@
 				"selectedIconPath": "static/image/home.png",
 				"text": "首页"
 			},
-			{
-				"pagePath": "pages/rate/rate",
-				"iconPath": "static/image/picCopy.png",
-				"selectedIconPath": "static/image/pic.png",
-				"text": "一张图"
-			},
-			{
-				"pagePath": "pages/ducha/ducha",
-				"iconPath": "static/image/dctbCopy.png",
-				"selectedIconPath": "static/image/dctb.png",
-				"text": "督查"
-			},
+			// {
+			// 	"pagePath": "pages/rate/rate",
+			// 	"iconPath": "static/image/picCopy.png",
+			// 	"selectedIconPath": "static/image/pic.png",
+			// 	"text": "一张图"
+			// },
+			// {
+			// 	"pagePath": "pages/ducha/ducha",
+			// 	"iconPath": "static/image/dctbCopy.png",
+			// 	"selectedIconPath": "static/image/dctb.png",
+			// 	"text": "督查"
+			// },
 			{
 				"pagePath": "pages/collapse/collapse",
 				"iconPath": "static/images/wt (2).png",
 				"selectedIconPath": "static/images/wt (1).png",
-				"text": "问题"
+				"text": "核查"
 			},
 			{
 				"pagePath": "pages/popup/popup",
